@@ -1,54 +1,791 @@
 <!doctype html>
-<html lang="en"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#07111f"><meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="manifest" href="manifest.webmanifest"><title>Feedback Finder Pro</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#07111f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<title>Feedback Finder Pro</title>
+
 <style>
-:root{--bg:#07111f;--card:#101e31;--line:#263b55;--text:#edf6ff;--muted:#9eb2c8;--cyan:#34d8ff;--green:#35e58b;--yellow:#ffd166;--red:#ff5263;--blue:#4b90ff}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#06101d,#0b1728);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:1180px;margin:auto;padding:14px}.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.brand{font-size:24px;font-weight:800;flex:1}.pill{padding:7px 11px;border:1px solid var(--line);border-radius:999px;color:var(--muted)}.live{color:var(--green);border-color:#246b4a}.grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-top:12px}.card{background:rgba(16,30,49,.94);border:1px solid var(--line);border-radius:15px;padding:14px;box-shadow:0 10px 30px #0004}.wide{grid-column:1/-1}h2,h3{margin:0 0 10px}button,select,input{font:inherit}button{border:0;border-radius:10px;padding:12px 15px;font-weight:800;background:var(--blue);color:white;cursor:pointer}button.secondary{background:#203550}button.danger{background:#8e3040}button.good{background:#13724d}button:disabled{opacity:.45}.controls{display:flex;gap:8px;flex-wrap:wrap}.mode{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mode button.active{outline:3px solid var(--cyan)}canvas{width:100%;background:#050c16;border:1px solid var(--line);border-radius:10px;display:block}.meter{height:14px;background:#08101b;border-radius:8px;overflow:hidden;border:1px solid var(--line)}#meterFill{width:0;height:100%;background:linear-gradient(90deg,var(--green),var(--yellow),var(--red))}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px}.stat{background:#0a1727;padding:9px;border-radius:9px}.stat b{display:block;font-size:18px}.step{display:flex;gap:10px;align-items:flex-start;padding:10px;border-left:3px solid var(--line);margin:7px 0;background:#0a1727}.step.current{border-color:var(--yellow)}.step.done{border-color:var(--green)}.num{min-width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#203550;font-weight:800}.alert{border:2px solid var(--red);background:#32151d;padding:14px;border-radius:12px}.bigfreq{font-size:38px;font-weight:900;color:var(--red)}.eqgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.eq{background:#0a1727;padding:12px;border-radius:10px}.eq b{display:block;font-size:22px}.hint{color:var(--muted);font-size:13px}.warning{color:var(--yellow)}.hidden{display:none!important}label{display:block;color:var(--muted);font-size:13px;margin:8px 0 4px}input[type=range]{width:100%}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);font-size:13px}.footer{color:var(--muted);font-size:12px;padding:18px 2px}@media(max-width:760px){.grid{grid-template-columns:1fr}.stats,.eqgrid{grid-template-columns:1fr 1fr}.wide{grid-column:auto}.bigfreq{font-size:31px}}@media(max-width:420px){.stats,.eqgrid,.mode{grid-template-columns:1fr}}
-</style></head><body><main>
-<div class="top"><div class="brand">Feedback Finder Pro</div><span id="status" class="pill">Mic stopped</span><span id="source" class="pill">No input</span></div>
+:root{
+  --bg:#07111f;
+  --card:#101e31;
+  --line:#263b55;
+  --text:#edf6ff;
+  --muted:#9eb2c8;
+  --cyan:#34d8ff;
+  --green:#35e58b;
+  --yellow:#ffd166;
+  --red:#ff5263;
+  --blue:#4b90ff;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:linear-gradient(180deg,#06101d,#0b1728);
+  color:var(--text);
+  font:15px system-ui,-apple-system,Segoe UI,sans-serif;
+}
+
+main{
+  max-width:1180px;
+  margin:auto;
+  padding:14px;
+}
+
+.top{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+.brand{
+  font-size:24px;
+  font-weight:800;
+  flex:1;
+}
+
+.pill{
+  padding:7px 11px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  color:var(--muted);
+}
+
+.live{
+  color:var(--green);
+  border-color:#246b4a;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:2fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+.card{
+  background:rgba(16,30,49,.94);
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:14px;
+}
+
+.wide{
+  grid-column:1/-1;
+}
+
+h2,h3{
+  margin:0 0 10px;
+}
+
+button,select,input{
+  font:inherit;
+}
+
+button{
+  border:0;
+  border-radius:10px;
+  padding:12px 15px;
+  font-weight:800;
+  background:var(--blue);
+  color:white;
+}
+
+button.secondary{
+  background:#203550;
+}
+
+button.danger{
+  background:#8e3040;
+}
+
+button.good{
+  background:#13724d;
+}
+
+button:disabled{
+  opacity:.45;
+}
+
+.controls{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.mode{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.mode button.active{
+  outline:3px solid var(--cyan);
+}
+
+canvas{
+  width:100%;
+  background:#050c16;
+  border:1px solid var(--line);
+  border-radius:10px;
+  display:block;
+}
+
+.meter{
+  height:14px;
+  background:#08101b;
+  border-radius:8px;
+  overflow:hidden;
+  border:1px solid var(--line);
+}
+
+#meterFill{
+  width:0;
+  height:100%;
+  background:linear-gradient(
+    90deg,
+    var(--green),
+    var(--yellow),
+    var(--red)
+  );
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:8px;
+  margin-top:8px;
+}
+
+.stat{
+  background:#0a1727;
+  padding:9px;
+  border-radius:9px;
+}
+
+.stat b{
+  display:block;
+  font-size:18px;
+}
+
+.alert{
+  border:2px solid var(--red);
+  background:#32151d;
+  padding:14px;
+  border-radius:12px;
+}
+
+.bigfreq{
+  font-size:38px;
+  font-weight:900;
+  color:var(--red);
+}
+
+.eqgrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.eq{
+  background:#0a1727;
+  padding:12px;
+  border-radius:10px;
+}
+
+.eq b{
+  display:block;
+  font-size:22px;
+}
+
+.hint{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.warning{
+  color:var(--yellow);
+}
+
+.hidden{
+  display:none !important;
+}
+
+label{
+  display:block;
+  color:var(--muted);
+  font-size:13px;
+  margin:8px 0 4px;
+}
+
+input[type=range]{
+  width:100%;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  text-align:left;
+  padding:8px;
+  border-bottom:1px solid var(--line);
+  font-size:13px;
+}
+
+.footer{
+  color:var(--muted);
+  font-size:12px;
+  padding:18px 2px;
+}
+
+@media(max-width:760px){
+  .grid{grid-template-columns:1fr}
+  .stats,.eqgrid{grid-template-columns:1fr 1fr}
+  .wide{grid-column:auto}
+}
+
+@media(max-width:420px){
+  .stats,.eqgrid,.mode{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+<main>
+
+<div class="top">
+  <div class="brand">
+    Feedback Finder Pro
+    <span class="hint">v3 Continuous</span>
+  </div>
+
+  <span id="status" class="pill">Mic stopped</span>
+  <span id="source" class="pill">No input</span>
+</div>
+
 <div class="grid">
-<section class="card"><h2>Operating mode</h2><div class="mode"><button id="liveMode" class="secondary active">Live Monitor</button><button id="ringMode" class="secondary">Guided Ring Out</button></div><div class="controls" style="margin-top:10px"><button id="start">Start microphone</button><button id="stop" class="secondary" disabled>Stop</button><button id="reset" class="danger">Reset session</button></div><p id="secure" class="hint"></p></section>
-<section class="card"><h2>Input</h2><div class="meter"><div id="meterFill"></div></div><div class="stats"><div class="stat">Level<b id="db">-∞ dBFS</b></div><div class="stat">Peak<b id="peak">--</b></div><div class="stat">Confidence<b id="conf">0%</b></div><div class="stat">Sample rate<b id="sr">--</b></div></div></section>
-<section class="card wide"><h2>Live waveform</h2><canvas id="wave" width="1100" height="150"></canvas></section>
-<section class="card wide"><h2>RTA spectrum <span class="hint">20 Hz to device Nyquist limit</span></h2><canvas id="rta" width="1100" height="330"></canvas></section>
-<section id="guide" class="card hidden"><h2>Guided Ring Out</h2><div id="steps"></div><div class="controls"><button id="beginRing">Begin ring out</button><button id="applied" class="good" disabled>Notch applied</button><button id="falseHit" class="secondary" disabled>False detection</button><button id="finish" class="secondary" disabled>Finish</button></div><p id="guideMsg" class="warning">Start with music off, one representative microphone open, and the presenter position behind the loudspeaker plane.</p></section>
-<section id="detection" class="card hidden"><div class="alert"><div class="hint">CONFIRMED NARROW-BAND INSTABILITY</div><div id="detFreq" class="bigfreq">--</div><div id="detNote"></div></div><h3 style="margin-top:12px">Yamaha QL starting notch</h3><div class="eqgrid"><div class="eq">FREQ<b id="notchF">--</b></div><div class="eq">Q<b id="notchQ">--</b></div><div class="eq">GAIN<b id="notchG">--</b></div></div><p id="why" class="hint"></p></section>
-<section id="tone" class="card hidden"><h2>Tone Protection</h2><p id="impact"></p><div id="toneEq" class="eq"></div><p class="warning">Listen first. Never boost the detected feedback frequency back up. Recheck stability after any tonal boost.</p></section>
-<section class="card"><h2>Detection settings</h2><label>Sensitivity <span id="sensVal"></span></label><input id="sens" type="range" min="6" max="20" value="11"><label>Persistence <span id="persVal"></span></label><input id="pers" type="range" min="5" max="30" value="12"><label>Minimum input level <span id="floorVal"></span></label><input id="floor" type="range" min="-65" max="-25" value="-48"><label>Source profile</label><select id="profile"><option>Corporate lav</option><option>Headset</option><option>Handheld vocal</option><option>Podium / gooseneck</option><option>Panel / multiple mics</option><option>Instrument / music</option></select></section>
-<section class="card"><h2>Session balance</h2><div id="balance" class="hint">No confirmed notches yet.</div></section>
-<section class="card wide"><div class="top"><h2 style="flex:1">Confirmed corrections</h2><button id="csv" class="secondary">Export CSV</button></div><div style="overflow:auto"><table><thead><tr><th>Time</th><th>Frequency</th><th>Note</th><th>Q</th><th>Cut</th><th>Tone impact</th></tr></thead><tbody id="log"></tbody></table></div></section>
-</div><div class="footer">Advisory analyzer only. It does not control the console or guarantee feedback prevention. Keep system level under manual control and protect hearing.</div>
-</main><script>
-(()=>{'use strict';
-const $=id=>document.getElementById(id), S={mode:'live',ctx:null,stream:null,an:null,data:null,time:null,raf:0,history:new Map(),latched:null,log:JSON.parse(localStorage.getItem('ff-log')||'[]'),phase:0,verifyUntil:0};
-const steps=['Prepare system','Raise level slowly','Hold level when alerted','Apply suggested notch','Verify stability','Repeat or finish'];
-function renderSteps(){ $('steps').innerHTML=steps.map((x,i)=>`<div class="step ${i<S.phase?'done':i===S.phase?'current':''}"><span class="num">${i+1}</span><div><b>${x}</b><div class="hint">${['Music off; one representative mic open; output EQ accessible.','Increase in small steps. Stop immediately if ringing accelerates.','The app requires a narrow peak to persist before latching.','Enter FREQ, Q and GAIN manually on the affected QL output or channel.','Hold the same approximate level while the app checks the correction.','Stop after useful headroom is reached; avoid excessive notches.'][i]}</div></div></div>`).join('')}
-function setMode(m){S.mode=m;$('liveMode').classList.toggle('active',m==='live');$('ringMode').classList.toggle('active',m==='ring');$('guide').classList.toggle('hidden',m!=='ring');renderSteps()}
-$('liveMode').onclick=()=>setMode('live');$('ringMode').onclick=()=>setMode('ring');
-function hz(f){return f>=1000?(f/1000).toFixed(f>=10000?1:2)+' kHz':Math.round(f)+' Hz'}
-function note(f){if(!f)return'--';let n=Math.round(69+12*Math.log2(f/440)),names=['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];return names[(n%12+12)%12]+(Math.floor(n/12)-1)}
-function rec(f){let q=f<250?8:f>5000?12:10, cut=f<180?-2:f>8000?-2:-3;return{q,cut}}
-function toneAdvice(f){if(f<125)return['Low-end weight may decrease','Usually no boost. Confirm HPF and loudspeaker/room coupling first.'];if(f<250)return['Warmth may decrease','Only if thin: broad +0.5 to +1 dB at 300 Hz, Q 0.8.'];if(f<500)return['Body may decrease','Only if thin: broad +0.5 to +1 dB at 600 Hz, Q 0.9.'];if(f<1000)return['Fullness may decrease','Usually leave flat; first compare speech at show level.'];if(f<2000)return['Forwardness may decrease','Only if recessed: broad +0.5 to +1 dB at 2.7 kHz, Q 0.9.'];if(f<4000)return['Presence/intelligibility may decrease','Only if dull: broad +0.5 to +1 dB at 4.5 kHz, Q 0.9.'];if(f<8000)return['Clarity may decrease','Only if dull: broad high shelf +0.5 to +1 dB at 9 kHz.'];return['Air may decrease','Usually no compensation for speech; optional +0.5 dB shelf at 10–12 kHz after listening.']}
-async function start(){try{if(!isSecureContext)throw Error('Microphone access requires HTTPS.');S.stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false},video:false});S.ctx=new (window.AudioContext||window.webkitAudioContext)();await S.ctx.resume();let src=S.ctx.createMediaStreamSource(S.stream);S.an=S.ctx.createAnalyser();S.an.fftSize=16384;S.an.smoothingTimeConstant=.55;src.connect(S.an);S.data=new Float32Array(S.an.frequencyBinCount);S.time=new Float32Array(S.an.fftSize);$('status').textContent='Listening';$('status').classList.add('live');$('source').textContent=S.stream.getAudioTracks()[0]?.label||'Active microphone';$('sr').textContent=S.ctx.sampleRate+' Hz';$('start').disabled=true;$('stop').disabled=false;tick()}catch(e){$('secure').textContent='Microphone error: '+e.message+' Open the published HTTPS GitHub Pages site in Safari, then allow microphone access.'}}
-function stop(){cancelAnimationFrame(S.raf);S.stream?.getTracks().forEach(t=>t.stop());S.ctx?.close();S.ctx=null;$('status').textContent='Mic stopped';$('status').classList.remove('live');$('start').disabled=false;$('stop').disabled=true}
-$('start').onclick=start;$('stop').onclick=stop;
-function drawWave(){let c=$('wave'),x=c.getContext('2d'),w=c.width,h=c.height;x.clearRect(0,0,w,h);x.strokeStyle='#35e58b';x.lineWidth=2;x.beginPath();for(let i=0;i<S.time.length;i+=8){let px=i/(S.time.length-1)*w,py=(.5-S.time[i]*.45)*h;i?x.lineTo(px,py):x.moveTo(px,py)}x.stroke()}
-function xlog(f,w){let lo=Math.log10(20),hi=Math.log10(S.ctx.sampleRate/2);return(Math.log10(Math.max(20,f))-lo)/(hi-lo)*w}
-function drawRta(peaks){let c=$('rta'),x=c.getContext('2d'),w=c.width,h=c.height;x.clearRect(0,0,w,h);x.strokeStyle='#18304a';x.lineWidth=1;[20,50,100,200,500,1000,2000,5000,10000,20000].forEach(f=>{if(f>S.ctx.sampleRate/2)return;let px=xlog(f,w);x.beginPath();x.moveTo(px,0);x.lineTo(px,h);x.stroke();x.fillStyle='#7890a8';x.fillText(hz(f),px+3,h-8)});x.strokeStyle='#34d8ff';x.lineWidth=2;x.beginPath();let bin=S.ctx.sampleRate/S.an.fftSize;for(let i=1;i<S.data.length;i+=2){let f=i*bin;if(f<20)continue;let px=xlog(f,w),py=h-(Math.max(-100,S.data[i])+100)/100*h;i===1?x.moveTo(px,py):x.lineTo(px,py)}x.stroke();if(S.latched){let px=xlog(S.latched.f,w);x.strokeStyle='#ff5263';x.lineWidth=3;x.beginPath();x.moveTo(px,0);x.lineTo(px,h);x.stroke();x.fillStyle='#ff5263';x.fillText(hz(S.latched.f),Math.min(px+6,w-85),18)}}
-function analyze(){let bin=S.ctx.sampleRate/S.an.fftSize, minDb=+$('floor').value, sens=+$('sens').value;let best={i:0,db:-200,score:0};for(let i=Math.ceil(20/bin);i<S.data.length-3;i++){let f=i*bin;if(f>S.ctx.sampleRate/2-10)break;let local=(S.data[i-3]+S.data[i-2]+S.data[i+2]+S.data[i+3])/4,score=S.data[i]-local;let hfAdjust=f>8000?2:0;if(S.data[i]>minDb&&score>sens-hfAdjust&&score>best.score)best={i,db:S.data[i],score}}let f=best.i*bin;if(best.i){let key=Math.round(12*Math.log2(f/440))*1;let count=(S.history.get(key)||0)+1;S.history.set(key,count);for(const [k,v] of S.history)if(k!==key)S.history.set(k,Math.max(0,v-1));let need=+$('pers').value;$('conf').textContent=Math.min(99,Math.round(count/need*100))+'%';$('peak').textContent=hz(f);if(count>=need&&!S.latched)latch(f,best.score)}else{$('conf').textContent='0%'} }
-function latch(f,score){let r=rec(f),t=toneAdvice(f);S.latched={f,q:r.q,cut:r.cut,tone:t[0],advice:t[1],time:new Date().toLocaleString()};$('detection').classList.remove('hidden');$('tone').classList.remove('hidden');$('detFreq').textContent=hz(f);$('detNote').textContent=note(f);$('notchF').textContent=hz(f);$('notchQ').textContent=r.q.toFixed(1);$('notchG').textContent=r.cut.toFixed(1)+' dB';$('why').textContent=`Detected as a narrow peak persisting above surrounding frequency bins. Score ${score.toFixed(1)} dB.`;$('impact').textContent=t[0];$('toneEq').innerHTML='<b>Optional recovery</b>'+t[1];if(S.mode==='ring'){S.phase=2;renderSteps();$('guideMsg').textContent='HOLD LEVEL. Apply the displayed notch, then tap Notch applied.';$('applied').disabled=false;$('falseHit').disabled=false;$('finish').disabled=false}else saveHit()}
-function saveHit(){if(!S.latched)return;S.log.unshift({...S.latched,profile:$('profile').value});localStorage.setItem('ff-log',JSON.stringify(S.log));renderLog();balance()}
-function clearLatch(){S.latched=null;S.history.clear();$('detection').classList.add('hidden');$('tone').classList.add('hidden');$('applied').disabled=true;$('falseHit').disabled=true}
-$('beginRing').onclick=()=>{S.phase=1;renderSteps();$('guideMsg').textContent='Raise the system slowly. Keep one hand on the master/output level and stop immediately when instructed.';$('finish').disabled=false};
-$('applied').onclick=()=>{saveHit();S.phase=4;renderSteps();$('guideMsg').textContent='Verifying for 4 seconds at the same approximate level. Do not raise yet.';S.verifyUntil=performance.now()+4000;let old=S.latched.f;clearLatch();setTimeout(()=>{S.phase=5;renderSteps();$('guideMsg').textContent='If stable, continue raising slowly to find the next limiting frequency. If the same ring returns, use another small cut rather than a large jump.'},4100)};
-$('falseHit').onclick=()=>{clearLatch();S.phase=1;renderSteps();$('guideMsg').textContent='Detection ignored. Continue cautiously.'};
-$('finish').onclick=()=>{S.phase=5;renderSteps();$('guideMsg').textContent='Ring out complete. Review Session balance and audition natural speech before applying any optional tone recovery.';clearLatch()};
-function tick(){S.an.getFloatTimeDomainData(S.time);S.an.getFloatFrequencyData(S.data);let rms=Math.sqrt(S.time.reduce((a,v)=>a+v*v,0)/S.time.length),db=rms?20*Math.log10(rms):-100;$('db').textContent=(db<=-99?'-∞':db.toFixed(1))+' dBFS';$('meterFill').style.width=Math.max(0,Math.min(100,(db+70)/70*100))+'%';drawWave();analyze();drawRta();S.raf=requestAnimationFrame(tick)}
-function renderLog(){$('log').innerHTML=S.log.map(v=>`<tr><td>${v.time}</td><td>${hz(v.f)}</td><td>${note(v.f)}</td><td>${v.q}</td><td>${v.cut} dB</td><td>${v.tone}</td></tr>`).join('')||'<tr><td colspan="6">No corrections logged.</td></tr>'}
-function balance(){if(!S.log.length){$('balance').textContent='No confirmed notches yet.';return}let bands={low:0,mid:0,pres:0,high:0};S.log.forEach(x=>{let k=x.f<500?'low':x.f<2000?'mid':x.f<6000?'pres':'high';bands[k]+=Math.abs(x.cut)});let max=Object.entries(bands).sort((a,b)=>b[1]-a[1])[0];let names={low:'warmth/body',mid:'fullness/forwardness',pres:'presence/intelligibility',high:'clarity/air'};$('balance').innerHTML=`${S.log.length} confirmed notch(es). Greatest cumulative reduction is in <b>${names[max[0]]}</b> (${max[1].toFixed(1)} dB total narrow cuts). ${S.log.length>=4?'<span class="warning">Four or more notches: check loudspeaker aim, open-mic count, gain structure and delay alignment before continuing.</span>':'Audition natural speech before using optional broad compensation.'}`}
-$('reset').onclick=()=>{if(confirm('Clear the complete session log?')){S.log=[];localStorage.removeItem('ff-log');clearLatch();S.phase=0;renderSteps();renderLog();balance()}};
-$('csv').onclick=()=>{let rows=[['Time','Frequency Hz','Note','Q','Cut dB','Profile','Tone impact'],...S.log.map(x=>[x.time,x.f.toFixed(1),note(x.f),x.q,x.cut,x.profile,x.tone])];let blob=new Blob([rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(',')).join('\n')],{type:'text/csv'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='feedback-finder-session.csv';a.click();URL.revokeObjectURL(a.href)};
-['sens','pers','floor'].forEach(id=>$(id).oninput=labels);function labels(){$('sensVal').textContent=$('sens').value+' dB peak';$('persVal').textContent=$('pers').value+' frames';$('floorVal').textContent=$('floor').value+' dBFS'}
-$('secure').textContent=isSecureContext?'Secure context detected. Safari can request microphone access.':'Not secure: publish with GitHub Pages HTTPS before using the microphone.';labels();renderSteps();renderLog();balance();if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
-})();</script></body></html>
+
+<section class="card">
+
+<h2>Operating Mode</h2>
+
+<div class="mode">
+<button id="liveMode" class="secondary active">
+Live Monitor
+</button>
+
+<button id="ringMode" class="secondary">
+Guided Ring Out
+</button>
+</div>
+
+<div class="controls" style="margin-top:10px">
+
+<button id="start">
+Start Microphone
+</button>
+
+<button id="stop"
+class="secondary"
+disabled>
+Stop
+</button>
+
+<button id="reset"
+class="danger">
+Reset Session
+</button>
+
+</div>
+
+<p id="secure" class="hint"></p>
+
+</section>
+
+<section class="card">
+
+<h2>Input</h2>
+
+<div class="meter">
+<div id="meterFill"></div>
+</div>
+
+<div class="stats">
+
+<div class="stat">
+Level
+<b id="db">-∞ dBFS</b>
+</div>
+
+<div class="stat">
+Current Peak
+<b id="peak">--</b>
+</div>
+
+<div class="stat">
+Detection Confidence
+<b id="conf">0%</b>
+</div>
+
+<div class="stat">
+Sample Rate
+<b id="sr">--</b>
+</div>
+
+</div>
+</section>
+
+<section class="card wide">
+
+<h2>Live Waveform</h2>
+
+<canvas
+id="wave"
+width="1100"
+height="150">
+</canvas>
+
+</section>
+
+<section class="card wide">
+
+<h2>
+RTA Spectrum
+<span class="hint">
+20 Hz to device limit
+</span>
+</h2>
+
+<canvas
+id="rta"
+width="1100"
+height="330">
+</canvas>
+
+</section>
+
+<section
+id="detection"
+class="card hidden">
+
+<div class="alert">
+
+<div class="hint">
+LATEST CONFIRMED FEEDBACK FREQUENCY
+</div>
+
+<div
+id="detFreq"
+class="bigfreq">
+--
+</div>
+
+<div id="detNote"></div>
+
+</div>
+
+<h3 style="margin-top:12px">
+Suggested Yamaha QL Notch
+</h3>
+
+<div class="eqgrid">
+
+<div class="eq">
+FREQ
+<b id="notchF">--</b>
+</div>
+
+<div class="eq">
+Q
+<b id="notchQ">--</b>
+</div>
+
+<div class="eq">
+GAIN
+<b id="notchG">--</b>
+</div>
+
+</div>
+
+<p
+id="why"
+class="hint">
+</p>
+
+</section>
+
+<section
+id="tone"
+class="card hidden">
+
+<h2>Tone Protection</h2>
+
+<p id="impact"></p>
+
+<div
+id="toneEq"
+class="eq">
+</div>
+
+<p class="warning">
+
+Listen before applying compensation.
+Never boost the detected feedback
+frequency back up.
+
+</p>
+
+</section>
+
+<section class="card">
+
+<h2>Detection Settings</h2>
+
+<label>
+Sensitivity
+<span id="sensVal"></span>
+</label>
+
+<input
+id="sens"
+type="range"
+min="6"
+max="20"
+value="10">
+
+<label>
+Persistence
+<span id="persVal"></span>
+</label>
+
+<input
+id="pers"
+type="range"
+min="4"
+max="30"
+value="10">
+
+<label>
+Minimum Input Level
+<span id="floorVal"></span>
+</label>
+
+<input
+id="floor"
+type="range"
+min="-65"
+max="-25"
+value="-50">
+
+<label>Source Profile</label>
+
+<select id="profile">
+
+<option>
+Corporate lav
+</option>
+
+<option>
+Headset
+</option>
+
+<option>
+Handheld vocal
+</option>
+
+<option>
+Podium / gooseneck
+</option>
+
+<option>
+Panel / multiple mics
+</option>
+
+<option>
+Instrument / music
+</option>
+
+</select>
+
+</section>
+
+<section class="card">
+
+<h2>Continuous Detection</h2>
+
+<p class="hint">
+
+The analyzer continues scanning after every
+confirmed frequency.
+
+A previously detected frequency receives a
+temporary cooldown while the analyzer searches
+for additional feedback frequencies.
+
+</p>
+
+<div class="stat">
+
+Confirmed This Session
+
+<b id="detCount">
+0
+</b>
+
+</div>
+
+</section>
+
+<section class="card wide">
+
+<div class="top">
+
+<h2 style="flex:1">
+All Detected Frequencies
+</h2>
+
+<button
+id="csv"
+class="secondary">
+Export CSV
+</button>
+
+</div>
+
+<div style="overflow:auto">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Time</th>
+<th>Frequency</th>
+<th>Note</th>
+<th>Q</th>
+<th>Cut</th>
+<th>Tone Impact</th>
+</tr>
+
+</thead>
+
+<tbody id="log"></tbody>
+
+</table>
+
+</div>
+
+</section>
+
+</div>
+
+<div class="footer">
+
+Continuous detection remains active while the
+microphone is running.
+
+Each detected frequency is temporarily
+suppressed after reporting so the analyzer can
+find other unstable frequencies.
+
+This is an advisory analyzer only.
+Keep system level and EQ under manual control.
+
+</div>
+
+</main>
+
+<script>
+(() => {
+
+'use strict';
+
+const $ = id =>
+document.getElementById(id);
+
+const S = {
+
+mode:'live',
+
+ctx:null,
+
+stream:null,
+
+an:null,
+
+data:null,
+
+time:null,
+
+raf:0,
+
+history:new Map(),
+
+recent:new Map(),
+
+markers:[],
+
+log:
+JSON.parse(
+localStorage.getItem('ff-log') || '[]'
+),
+
+autoClearTimer:0
+
+};
+
+function hz(f){
+
+if(!f)
+return '--';
+
+return f >= 1000
+
+? (f/1000)
+.toFixed(f >= 10000 ? 1 : 2)
++ ' kHz'
+
+: Math.round(f)
++ ' Hz';
+
+}
+
+function note(f){
+
+if(!f)
+return '--';
+
+const n =
+Math.round(
+69 +
+12 *
+Math.log2(f/440)
+);
+
+const names = [
+'C','C#','D','D#',
+'E','F','F#','G',
+'G#','A','A#','B'
+];
+
+return names[
+(n % 12 + 12) % 12
+] +
+(
+Math.floor(n/12) - 1
+);
+
+}
+
+function rec(f){
+
+let q = 10;
+let cut = -3;
+
+if(f < 250)
+q = 8;
+
+if(f > 5000)
+q = 12;
+
+if(f < 180)
+cut = -2;
+
+if(f > 8000)
+cut = -2;
+
+return {q,cut};
+
+}
+
+function toneAdvice(f){
+
+if(f < 125)
+return [
+'Low-end weight may decrease',
+'Usually do not compensate. Check HPF, loudspeaker coupling and room modes first.'
+];
+
+if(f < 250)
+return [
+'Warmth may decrease',
+'If speech becomes thin: consider a broad +0.5 to +1 dB around 300 Hz, Q 0.8.'
+];
+
+if(f < 500)
+return [
+'Body may decrease',
+'If required: broad +0.5 to +1 dB around 600 Hz, Q 0.9.'
+];
+
+if(f < 1000)
+return [
+'Fullness may decrease',
+'Usually leave flat first and listen to speech at show level.'
+];
+
+if(f < 2000)
+return [
+'Forwardness may decrease',
+'If recessed: broad +0.5 to +1 dB around 2.7 kHz, Q 0.9.'
+];
+
+if(f < 4000)
+return [
+'Presence or intelligibility may decrease',
+'If speech becomes dull: broad +0.5 to +1 dB around 4.5 kHz, Q 0.9.'
+];
+
+if(f < 8000)
+return [
+'Clarity may decrease',
+'If necessary: broad high shelf +0.5 to +1 dB around 9 kHz.'
+];
+
+return [
+'Air may decrease',
+'Usually no compensation is required for speech. Optional +0.5 dB shelf around 10–12 kHz.'
+];
+
+}
+
+async function start(){
+
+try{
+
+if(!isSecureContext)
+throw new Error(
+'Microphone requires HTTPS.'
+);
+
+S.stream =
+await navigator.mediaDevices
+.getUserMedia({
+
+audio:{
+echoCancellation:false,
+noiseSuppression:false,
+autoGainControl:false
+},
+
+video:false
+
+});
+
+S.ctx =
+new (
+window.AudioContext ||
+window.webkitAudioContext
+)();
+
+await S.ctx.resume();
+
+const src =
